@@ -117,7 +117,16 @@
       }
 
       getValue(field) {
-          if ((field === 'clean_base') && (!this.state.cleanBase)) { field = 'bin' };
+          if ((field === 'clean_base') && (!this.state.cleanBase)) { 
+            field = this.state.attributes.bin;
+            const bin_check = this.state.attributes.bin_present;
+            const value = (this.stateObj && this.state.attributes[bin_check] in this.stateObj.attributes)
+              ? this.stateObj.attributes[this.state.attributes[bin_check]]
+              : (this._hass ? this._hass.localize('state.default.unavailable') : 'Unavailable');
+            if (value === 'No') {
+              return `${this.state.labels[field]}: Missing!`;
+            };
+           };
           if ((field === 'evac_events') && (!this.state.cleanBase)) {  return `` };
           const value = (this.stateObj && this.state.attributes[field] in this.stateObj.attributes)
               ? this.stateObj.attributes[this.state.attributes[field]]
@@ -267,6 +276,7 @@
               mode: 'phase',
               clean_base: 'clean_base',
               bin: 'bin',
+              bin_present: 'bin_present',
               area_cleaned: 'area_cleaned',
               job_time: 'job_time',
               total_jobs: 'total_jobs',
@@ -302,7 +312,7 @@
           this.style = {
               text: `cursor: pointer; color: ${config.image !== false ? 'white; text-shadow: 0 0 10px black;' : 'var(--primary-text-color);'}`,
               content: `padding: ${config.showButtons ? '16px 16px 4px' : '16px'};`,
-              background: config.image !== false ? `background-image: url('${config.image || '/local/vacuum.png'}')` : ''
+              background: config.image !== false ? `background-image: url('${config.image || '/community_plugin/lovelace-roomba-vacuum-card/vacuum.png'}')` : ''
           };
 
           this._config = config;
