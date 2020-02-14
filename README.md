@@ -2,16 +2,15 @@
 
 HA Lovelace Card for iRobot Roomba Vacuum Cleaner leveraging the rest980 Docker Image
 
-Please refer my [ha-rest980-roomba](https://github.com/jeremywillans/ha-rest980-roomba) GitHub Repository for detailed instructions for using this card.
+Please refer my [ha-rest980-roomba] GitHub Repository for detailed instructions for using this card.
 
-[![GH-release](https://img.shields.io/github/v/release/jeremywillans/lovelace-roomba-vacuum-card.svg?style=flat-square)](https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/roomba-vacuum-card.js)
-[![GH-last-commit](https://img.shields.io/github/last-commit/jeremywillans/lovelace-roomba-vacuum-card.svg?style=flat-square)](https://github.com/jeremywillans/lovelace-roomba-vacuum-card/commits/master)
-[![GH-code-size](https://img.shields.io/github/languages/code-size/jeremywillans/lovelace-roomba-vacuum-card.svg?style=flat-square)](https://github.com/jeremywillans/lovelace-roomba-vacuum-card)
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg?style=flat-square)](https://github.com/custom-components/hacs)
+[![gh_release]](../../releases)
+[![gh_last_commit]](../../commits/master)
+[![hacs_custom]](hacs)
 
 ## Setup
 
-Install using [HACS](https://hacs.xyz/) using the following custom plugin repository ```https://github.com/jeremywillans/lovelace-roomba-vacuum-card```
+Install using [HACS](hacs) using the following custom plugin repository ```https://github.com/jeremywillans/lovelace-roomba-vacuum-card```
 ```yaml
 resources:
   - type: module
@@ -20,7 +19,7 @@ resources:
 
 OR 
 
-Manually add [roomba-vacuum-card.js](https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/roomba-vacuum-card.js) and [vacuum.png](https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/vacuum.png)
+Manually add [roomba-vacuum-card.js] and [vacuum.png]
 to your `<config>/www/` folder and add the following to your `ui-lovelace.yaml` file:
 ```yaml
 resources:
@@ -111,6 +110,11 @@ Advanced configuration:
     total_jobs: Trabajos
     evac_events: Envases
 ```
+## Support
+
+Got questions? Please post them [here][forum].
+
+In case you've found a bug, please [open an issue on GitHub](../../issues).
 
 ## Disclaimer
 
@@ -119,13 +123,38 @@ or any of its subsidiaries or its affiliates. The official iRobot website can be
 
 ## Credits
 
-- [Ben Tomlin](https://github.com/benct) for creating the [xiaomi-vacuum-card](https://github.com/benct/lovelace-xiaomi-vacuum-card) from which this is shamelessly derived from!
-- [Facu ZAK](https://github.com/koalazak) for creating dorita980 and rest980 !
+- [Ben Tomlin][benct] for creating the [xiaomi-vacuum-card](https://github.com/benct/lovelace-xiaomi-vacuum-card) from which this is shamelessly derived from!
+- [Facu ZAK][facuzak] for creating dorita980 and rest980 !
 
 ## My Repos
 
-[ha-rest980-roomba](https://github.com/jeremywillans/ha-rest980-roomba) | 
-[roomba-vacuum-card](https://github.com/jeremywillans/lovelace-roomba-vacuum-card) | 
-[hass-addons](https://github.com/jeremywillans/hass-addons) | 
+[ha-rest980-roomba] | 
+[roomba-vacuum-card] | 
+[hass-addons] | 
+[event-emitter]
 
-[![BMC](https://www.buymeacoffee.com/assets/img/custom_images/white_img.png)](https://www.buymeacoffee.com/jeremywillans)
+[![BMC]](https://www.buymeacoffee.com/jeremywillans)
+
+
+[gh_release]: https://img.shields.io/github/v/release/jeremywillans/lovelace-roomba-vacuum-card.svg?style=for-the-badge
+[gh_last_commit]: https://img.shields.io/github/last-commit/jeremywillans/lovelace-roomba-vacuum-card.svg?style=for-the-badge
+[hacs_custom]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
+[hacs]: https://github.com/custom-components/hacs
+
+[roomba-vacuum-card.js]: https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/dist/roomba-vacuum-card.js
+[vacuum.png]: https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/dist/vacuum.png
+
+[facuzak]: https://github.com/koalazak
+[rest980]: https://github.com/koalazak/rest980
+[dorita980]: https://github.com/koalazak/rest980
+[gotschi]: https://community.home-assistant.io/u/gotschi/summary
+[benct]: https://github.com/benct
+[xiaomi-vacuum-card]: https://github.com/benct/lovelace-xiaomi-vacuum-card
+
+[ha-rest980-roomba]: https://github.com/jeremywillans/ha-rest980-roomba
+[roomba-vacuum-card]: https://github.com/jeremywillans/lovelace-roomba-vacuum-card
+[hass-addons]: https://github.com/jeremywillans/hass-addons
+[event-emitter]: https://github.com/jeremywillans/event-emitter
+[BMC]: https://www.buymeacoffee.com/assets/img/custom_images/white_img.png
+
+[forum]: https://community.home-assistant.io/t/irobot-roomba-i7-configuration-using-rest980/161175
