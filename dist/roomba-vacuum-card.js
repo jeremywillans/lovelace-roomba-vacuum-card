@@ -66,8 +66,21 @@
       }
       .grid-right {
         text-align: right;
+        font-size: 110%;
         padding-right: 10px;
         border-right: 2px solid var(--primary-color);
+      }
+      .tabactive {
+        display: grid;
+      }
+      .tabpassive {
+        display: none;
+      }
+      .totals {
+        border-right: 2px solid var(--primary-color)
+      }
+      .job {
+        border-right: 2px solid var(--accent-color)
       }`;
       }
 
@@ -75,27 +88,34 @@
           return html`
           <ha-card .hass="${this._hass}" .config="${this._config}" class="background" style="${this.style.background}">
             ${this.state.showTitle ?
-            html`<div class="grid" @click="${() => this.fireEvent('hass-more-info')}">
+            html`<div class="grid">
               ${this.state.name ?
               html`<div class="title-left" style="${this.style.text}" @click="${() => this.fireEvent('hass-more-info')}">${this.state.name}</div>` : html`<div class="title-left" style="${this.style.text}" @click="${() => this.fireEvent('hass-more-info')}"></div>`}
               ${this.state.showMaint ?
               html`<div class="title-right" style="${this.style.text}" @click="${() => this.fireEvent('hass-more-info')}"><ha-icon icon="mdi:wrench" style="padding-bottom: 5px"></ha-icon> <ha-icon icon="${this.getMaintStatus('icon')}" style="padding-bottom: 5px; color:${this.getMaintStatus('color')}"></ha-icon></div>` : null}
             </div>` : null }
             ${this.state.showLabels ? html`
-            <div class="content grid" style="${this.style.content + this.style.text}" @click="${() => this.fireEvent('hass-more-info')}">
-              <div class="grid-content grid-left">
+            <div class="content grid" style="${this.style.content + this.style.text}" >
+              <div class="grid-content grid-left" @click="${() => this.fireEvent('hass-more-info')}">
                 <div>${this.getState('status')}</div>
                 <div>${this.getValue('mode')}</div>
                 <div>${this.getValue('battery')}</div>
                 <div>${this.getValue('clean_base')}</div>
               </div>
-              ${this.state.showStats ? html`
-              <div class="grid-content grid-right" >
-                <div>${this.getValue('area_cleaned')}</div>
-                <div>${this.getValue('job_time')}</div>
+              <div id="total" class="${this.state.hideRightGrid ? "grid-content " : "grid-content grid-right totals"} ${this.state.defaultTotals ? "tabactive" : "tabpassive"}" @click="${() => this.tabSwap('last')}">
+              ${this.state.showTotals ? html`
+                <div>${this.getValue('total_area')}</div>
+                <div>${this.getValue('total_time')}</div>
                 <div>${this.getValue('total_jobs')}</div>
-                <div>${this.getValue('evac_events')}</div>
-              </div>` : null}
+                <div>${this.getValue('evac_events')}</div>` : null}
+              </div>
+              <div id="last" class="${this.state.hideRightGrid ? "grid-content " : "grid-content grid-right job"} ${this.state.defaultTotals ? "tabpassive" : "tabactive"}" @click="${() => this.tabSwap('total')}">
+              ${this.state.showJob ? html`
+                <div>${this.getValue('job_initiator')}</div>
+                <div>${this.getValue('job_time')}</div>
+                <div>${this.getValue('job_recharge')}</div>
+                <div>${this.getValue('job_area')}</div>` : null}
+              </div>
             </div>` : null}
             ${this.state.showButtons ? html`
             <div class="flex" style="${this.style.text}">
@@ -105,19 +125,21 @@
       }
 
       renderButton(key) {
-          if (key != "blank") {
+          if ((key == "stop") && (this.stateObj.state == "Ready")) {
+            return html`<div class="button" style="cursor:default" @click="${() => this.tabSwap('total')}"></div>`  
+          } else if (key != "blank") {
             return this.state.buttons[key]
               ? html`<div class="button" @tap="${() => this.callService(key)}"><ha-icon icon="${this.getButton(key,"icon")}"></ha-icon>  ${this.getButton(key,"label")}</div>`
               : null;
           } else {
             return this.state.buttons[key]
-              ? html`<div class="button" style="cursor:default"></div>`
+              ? html`<div class="button" style="cursor:default" @click="${() => this.tabSwap('total')}"></div>`  
               : null;
           }
       }
 
       getValue(field) {
-          if ((field === 'clean_base') && (!this.state.cleanBase)) { 
+          if ((this.state.attributes[field] === 'clean_base') && (!this.state.cleanBase)) { 
             field = this.state.attributes.bin;
             const bin_check = this.state.attributes.bin_present;
             const value = (this.stateObj && this.state.attributes[bin_check] in this.stateObj.attributes)
@@ -126,8 +148,8 @@
             if (value === 'No') {
               return `${this.state.labels[field]}: Missing!`;
             };
-           };
-          if ((field === 'evac_events') && (!this.state.cleanBase)) {  return `` };
+          };
+          if ((this.state.attributes[field] === 'evac_events') && (!this.state.cleanBase)) {  return `` };
           const value = (this.stateObj && this.state.attributes[field] in this.stateObj.attributes)
               ? this.stateObj.attributes[this.state.attributes[field]]
               : (this._hass ? this._hass.localize('state.default.unavailable') : 'Unavailable');
@@ -135,7 +157,10 @@
       };
 
       getState(field) {
-        const value = this.stateObj.state 
+        const value = this.stateObj.state;
+        if (this.state.autoSwitch) {
+          if (value !== "Ready" ? this.tabSwap('last') : this.tabSwap('total'));
+        }
         return `${this.state.labels[field]}: ${value}`;
       };
 
@@ -189,7 +214,6 @@
                 case "action":
                     return `pause`;
               }
-
             }
           case "dock":
             if ((this.stateObj.attributes['phase'] === 'Charge') || (this.stateObj.attributes['phase'] === 'Idle') || (this.stateObj.attributes['phase'] === 'Empty')) {
@@ -215,13 +239,26 @@
             }
           case "stop":
             // Stop
-            switch(field) {
-              case "label":
-                return `Stop`;
-              case "icon":
-                return `mdi:stop`;
-              case "action":
-                return `stop`;
+            if (this.stateObj.state === 'Ready') {
+              // Blank
+              switch(field) {
+                case "label":
+                  return ``;
+                case "icon":
+                  return ``;
+                case "action":
+                  return ``;
+              }
+            } else {
+              // Stop
+              switch(field) {
+                case "label":
+                  return `Stop`;
+                case "icon":
+                  return `mdi:stop`;
+                case "action":
+                    return `stop`;
+              }
             }
           case "find":
             // Fina - NOT IMPLEMENTED YET
@@ -234,6 +271,25 @@
                 return `find`; 
               }
         }       
+      };
+
+      tabSwap(tab) {
+        // Swap Tabs
+        switch(tab) {
+          case "last":
+            if (!this.state.showJob) { return; }
+            var tabLast = this.shadowRoot.getElementById("total");
+            if (tabLast !== null) { tabLast.style.display = "none" };
+            var tabTotal = this.shadowRoot.getElementById("last");
+            if (tabTotal !== null) { tabTotal.style.display = "grid" };
+            break;
+          case "total":
+            if (!this.state.showTotals) { return; }
+            var tabLast = this.shadowRoot.getElementById("last");
+            if (tabLast !== null) { tabLast.style.display = "none" };
+            var tabTotal = this.shadowRoot.getElementById("total");
+            if (tabTotal !== null) { tabTotal.style.display = "grid" };
+        }
       };
 
       callService(service) {
@@ -263,11 +319,15 @@
               battery: 'Battery',
               clean_base: 'Clean Base',
               bin: 'Bin',
-              area_cleaned: 'Area',
-              job_time: 'Time',
+              maint: 'Maint',
+              total_area: 'Area',
+              total_time: 'Time',
               total_jobs: 'Jobs',
               evac_events: 'Evacs',
-              maint: 'Maint',
+              job_initiator: 'Source',
+              job_time: 'Time',
+              job_recharge: 'Recharge',
+              job_area: 'Area'
           };
 
           const attributes = {
@@ -277,18 +337,22 @@
               clean_base: 'clean_base',
               bin: 'bin',
               bin_present: 'bin_present',
-              area_cleaned: 'area_cleaned',
-              job_time: 'job_time',
+              maint_due: 'maint_due',
+              total_area: 'total_area',
+              total_time: 'total_time',
               total_jobs: 'total_jobs',
               evac_events: 'evac_events',
-              maint_due: 'maint_due',
+              job_initiator: 'job_initiator',
+              job_time: 'job_time',
+              job_recharge: 'job_recharge',
+              job_area: 'job_area'
           };
 
           const buttons = {
               startstop: true,
-              blank: true,
+              blank: false,
+              stop: true,
               dock: true,
-              stop: false,
               find: false, // Not implemented in rest980
           };
 
@@ -296,13 +360,17 @@
           if (config.entity.split('.')[0] !== 'sensor') throw new Error('Please define a sensor entity.');
 
           this.state = {
-              showStats: config.stats !== false,
+              showTotals: config.totals !== false,
+              showJob: config.job !== false,
               showButtons: config.buttons !== false,
               showMaint: config.maint !== false,
               showLabels: config.labels !== false,
               showName: config.name !== false,
               cleanBase: config.clean_base !== false,
               showTitle: (config.name !== false || config.maint !== false),
+              defaultTotals: config.defaultjob !== true ? (config.totals !== false ? true : false) : (config.job !== false ? false : true), 
+              hideRightGrid: (config.totals === false && config.job === false),
+              autoSwitch: config.autoswitch !== false,
 
               buttons: Object.assign({}, buttons, config.buttons),
               attributes: Object.assign({}, attributes, config.attributes),

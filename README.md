@@ -37,19 +37,45 @@ resources:
 | name | string/bool | `friendly_name` | Override entity friendly name (set to `false` to hide title)
 | image | string/bool | `/<hacs>/vacuum.png` | Custom path/name of background image (set to `false` to disable background)
 | buttons | object/bool | *(see below)* | Set to `false` to hide button row
-| labels | object/bool | *(see below)* | Set to `false` to hide details/labels
+| attributes | object/bool | *(see below)* | Customize attribute fields
+| labels | object/bool | *(see below)* | Customize label fields
 | maint | bool | true | Display maintenance status
 | clean_base | bool | true | If no Clean Base, Set to `false` to show Bin Status
+| totals | bool | true | Show Total Stats on Right
+| job | bool | true | Show Job Stats on Right
+| defaultTotals | bool | true | Shows Total Stats by default when not cleaning
+| autoswitch | bool | true | Auto switches to Job Stats when cleaning
 
 ### Buttons object
 
 | Name | Type | Default | Description
 | ---- | ---- | ------- | -----------
 | startstop | bool | `true` | Show or hide start button
-| blank | bool | `true` | Show or hide blank button - splits startstop and dock
+| stop | bool | `false` | Show or hide stop button - enable blank (below) if you disable this
+| blank | bool | `true` | Show or hide blank button - splits startstop and dock if stop is disabled
 | dock | bool | `true` | Show or hide dock/empty button
-| stop | bool | `false` | Show or hide stop button
 | find | bool | `false` | Show or hide find button - not yet implemented in rest980
+
+### Attributes object
+
+Customize attribute fields.
+
+| Name | Type | Default | Description
+| ---- | ---- | ------- | -----------
+| status | string | `state` | Change status attribute
+| mode | string | `phase` | Change mode attribute
+| battery | string | `battery` | Change battery attribute
+| clean_base | string | `clean_base` | Change clean base attribute
+| bin | string | `bin` | Change bin attribute
+| maint_due | string | `maint_due` | Change maintenance due attribute (boolean)
+| total_area | string | `area_cleaned` | Change total area cleaned attribute
+| total_time | string | `job_time` | Change total job time attribute
+| total_jobs | string | `total_jobs` | Change total jobs attribute
+| evac_events | string | `evac_events` | Change clean base empties attribute (for Clean Base)
+| job_initiator | string | `last_job` | Change current/last mission job initiator attribute
+| job_time | string | `last_job_time` | Change current/last mission area cleaned attribute
+| job_recharge | string | `last_job_recharge_time` | Change current/last mission recharge minutes attribute
+| job_area | string | `last_job_area` | Change current/last mission area cleaned attribute
 
 ### Labels object
 
@@ -62,10 +88,14 @@ Customize or translate label names.
 | battery | string | `Battery` | Change battery label
 | clean_base | string | `Clean Base` | Change clean base label
 | bin | string | `Bin` | Change bin label
-| area_cleaned | string | `Area` | Change area cleaned  label
-| job_time | string | `Time` | Change job time label
+| total_area | string | `Area` | Change total area cleaned label
+| total_time | string | `Time` | Change total job time label
 | total_jobs | string | `Jobs` | Change total jobs label
 | evac_events | string | `Evacs` | Change clean base empties label (for Clean Base)
+| job_initiator | string | `Source` | Change current/last mission job initiator label
+| job_time | string | `Time` | Change current/last mission area time label
+| job_recharge | string | `Recharge` | Change current/last mission recharge minutes label
+| job_area | string | `Area` | Change current/last mission area cleaned label
 
 ## Examples
 
@@ -73,11 +103,15 @@ Default
 
 ![roomba-vacuum-card](https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/examples/default.png)
 
+Default - Jobs Page
+
+![roomba-vacuum-card](https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/examples/default-jobs.png)
+
 Hidden Title/Name and Maintenance
 
 ![roomba-vacuum-card-no-title](https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/examples/no-title.png)
 
-Hidden Button Row
+Hidden Button Row (with Maintenance Due)
 
 ![roomba-vacuum-card-no-buttons](https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/examples/no-buttons.png)
 
@@ -99,8 +133,8 @@ Advanced configuration:
   name: Bump
   clean_base: false
   buttons:
-    blank: false
-    stop: true
+    blank: true
+    stop: false
   labels:
     status: Estado
     battery: Batería
