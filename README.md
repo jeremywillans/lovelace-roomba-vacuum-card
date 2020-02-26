@@ -8,6 +8,8 @@ Please refer my [ha-rest980-roomba] GitHub Repository for detailed instructions 
 [![gh_last_commit]](../../commits/master)
 [![hacs_custom]](hacs)
 
+![roomba-vacuum-card](https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/examples/default.png)
+
 ## Setup
 
 Install using [HACS](hacs) using the following custom plugin repository ```https://github.com/jeremywillans/lovelace-roomba-vacuum-card```
