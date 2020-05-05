@@ -41,6 +41,7 @@ resources:
 | buttons | object/bool | *(see below)* | Set to `false` to hide button row
 | attributes | object/bool | *(see below)* | Customize attribute fields
 | labels | object/bool | *(see below)* | Customize label fields
+| vac_states | object/bool | *(see below)* | Customize vacuum states
 | maint | bool | true | Display maintenance status
 | clean_base | bool | true | If no Clean Base, Set to `false` to show Bin Status
 | totals | bool | true | Show Total Stats on Right
@@ -98,6 +99,19 @@ Customize or translate label names.
 | job_time | string | `Time` | Change current/last mission area time label
 | job_recharge | string | `Recharge` | Change current/last mission recharge minutes label
 | job_area | string | `Area` | Change current/last mission area cleaned label
+
+### Vac_States object
+
+Customize or translate vacuum states as defined in vacuum.yaml.
+
+| Name | Type | Default | Description
+| ---- | ---- | ------- | -----------
+| ready | string | `Ready` | Change Ready state
+| stuck | string | `Stuck` | Change Stuck state
+| pending | string | `Pending` | Change Pending state
+| charge | string | `Charge` | Change Charge state
+| idle | string | `Idle` | Change Idle state
+| empty | string | `Empty` | Change Empty state
 
 ## Examples
 
