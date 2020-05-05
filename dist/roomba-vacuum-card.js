@@ -49,6 +49,10 @@
         cursor: pointer;
         padding: 16px;
       }
+      .button-blank {
+        cursor: pointer;
+        padding: 28px;
+      }
       .grid {
         display: grid;
         grid-template-columns: repeat(2, auto);
@@ -125,8 +129,10 @@
       }
 
       renderButton(key) {
-          if ((key == "stop") && (this.stateObj.state == "Ready")) {
-            return html`<div class="button" style="cursor:default" @click="${() => this.tabSwap('total')}"></div>`  
+          if (((key == "stop") && (this.stateObj.state == this.state.vac_states.ready)) || (this.stateObj.state == this.state.vac_states.pending) || (this.stateObj.state == this.state.vac_states.empty)) {
+            return this.state.buttons[key]
+            ? html`<div class="button-blank" style="cursor:default" @click="${() => this.tabSwap('total')}"></div>`
+            : null;
           } else if (key != "blank") {
             return this.state.buttons[key]
               ? html`<div class="button" @tap="${() => this.callService(key)}"><ha-icon icon="${this.getButton(key,"icon")}"></ha-icon>  ${this.getButton(key,"label")}</div>`
@@ -159,7 +165,7 @@
       getState(field) {
         const value = this.stateObj.state;
         if (this.state.autoSwitch) {
-          if (value !== "Ready" ? this.tabSwap('last') : this.tabSwap('total'));
+          if (value !== this.state.vac_states.ready ? this.tabSwap('last') : this.tabSwap('total'));
         }
         return `${this.state.labels[field]}: ${value}`;
       };
@@ -184,7 +190,7 @@
       getButton(index, field) {
         switch(index) {
           case "startstop":
-            if (this.stateObj.state === 'Ready') {
+            if (this.stateObj.state === this.state.vac_states.ready) {
               // Full Clean
               switch(field) {
                 case "label":
@@ -194,7 +200,7 @@
                 case "action":
                   return `start`;
               }
-            } else if ((this.stateObj.attributes['phase'] === 'Paused') || (this.stateObj.attributes['phase'] === 'Stuck') || (this.stateObj.attributes['phase'] === 'Charge')) {
+            } else if ((this.stateObj.attributes['phase'] === this.state.vac_states.paused) || (this.stateObj.attributes['phase'] === this.state.vac_states.stuck) || (this.stateObj.attributes['phase'] === this.state.vac_states.charge)) {
               // Resume
               switch(field) {
                 case "label":
@@ -216,7 +222,7 @@
               }
             }
           case "dock":
-            if ((this.stateObj.attributes['phase'] === 'Charge') || (this.stateObj.attributes['phase'] === 'Idle') || (this.stateObj.attributes['phase'] === 'Empty')) {
+            if ((this.stateObj.attributes['phase'] === this.state.vac_states.charge) || (this.stateObj.attributes['phase'] === this.state.vac_states.idle)) {
               // Resume
               switch(field) {
                 case "label":
@@ -239,7 +245,7 @@
             }
           case "stop":
             // Stop
-            if (this.stateObj.state === 'Ready') {
+            if (this.stateObj.state === this.state.vac_states.ready) {
               // Blank
               switch(field) {
                 case "label":
@@ -330,6 +336,15 @@
               job_area: 'Area'
           };
 
+          const vac_states = {
+            ready: 'Ready',
+            stuck: 'Stuck',
+            pending: 'Pending',
+            charge: 'Charge',
+            idle: 'Idle',
+            empty: 'Empty'
+          };
+
           const attributes = {
               status: 'state',
               battery: 'battery',
@@ -374,6 +389,7 @@
 
               buttons: Object.assign({}, buttons, config.buttons),
               attributes: Object.assign({}, attributes, config.attributes),
+              vac_states: Object.assign({}, vac_states, config.vac_states),
               labels: Object.assign({}, labels, config.labels),
           };
 
