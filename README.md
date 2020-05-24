@@ -16,7 +16,7 @@ Install using [HACS][hacs] using the following custom plugin repository ```https
 ```yaml
 resources:
   - type: module
-    url: /community_plugin/lovelace-roomba-vacuum-card/roomba-vacuum-card.js
+    url: /hacsfiles/lovelace-roomba-vacuum-card/roomba-vacuum-card.js
 ```
 
 OR 
