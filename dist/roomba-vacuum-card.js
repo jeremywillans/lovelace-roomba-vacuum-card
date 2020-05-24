@@ -396,7 +396,7 @@
           this.style = {
               text: `cursor: pointer; color: ${config.image !== false ? 'white; text-shadow: 0 0 10px black;' : 'var(--primary-text-color);'}`,
               content: `padding: ${config.showButtons ? '16px 16px 4px' : '16px'};`,
-              background: config.image !== false ? `background-image: url('${config.image || '/community_plugin/lovelace-roomba-vacuum-card/vacuum.png'}')` : ''
+              background: config.image !== false ? `background-image: url('${config.image || '/hacsfiles/lovelace-roomba-vacuum-card/vacuum.png'}')` : ''
           };
 
           this._config = config;
