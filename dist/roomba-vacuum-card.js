@@ -266,16 +266,6 @@
                     return `stop`;
               }
             }
-          case "find":
-            // Fina - NOT IMPLEMENTED YET
-            switch(field) {
-              case "label":
-                return `Find`;
-              case "icon":
-                return `mdi:map-marker`;
-              case "action":
-                return `find`; 
-              }
         }       
       };
 
@@ -332,12 +322,13 @@
               evac_events: 'Evacs',
               job_initiator: 'Source',
               job_time: 'Time',
-              job_recharge: 'Recharge',
+              job_recharge: 'Resume In',
               job_area: 'Area'
           };
 
           const vac_states = {
             ready: 'Ready',
+            paused: 'Paused',
             stuck: 'Stuck',
             pending: 'Pending',
             charge: 'Charge',
@@ -367,8 +358,7 @@
               startstop: true,
               blank: false,
               stop: true,
-              dock: true,
-              find: false, // Not implemented in rest980
+              dock: true
           };
 
           if (!config.entity) throw new Error('Please define an entity.');
