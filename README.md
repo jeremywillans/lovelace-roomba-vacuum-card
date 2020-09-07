@@ -48,6 +48,7 @@ resources:
 | job | bool | true | Show Job Stats on Right
 | defaultTotals | bool | true | Shows Total Stats by default when not cleaning
 | autoswitch | bool | true | Auto switches to Job Stats when cleaning
+| vacuum_action | string | `vacuum_action` | Change action rest command
 
 ### Buttons object
 
