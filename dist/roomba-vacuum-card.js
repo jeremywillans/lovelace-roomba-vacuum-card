@@ -129,7 +129,7 @@
       }
 
       renderButton(key) {
-          if (((key == "stop") && (this.stateObj.state == this.state.vac_states.ready)) || (this.stateObj.state == this.state.vac_states.pending) || (this.stateObj.state == this.state.vac_states.empty)) {
+          if (((key == "stop") && (this.stateObj.state == this.state.vac_states.ready)) || ((key == "dock") && (this.stateObj.state == this.state.vac_states.ready) && (!this.state.cleanBase)) || (this.stateObj.state == this.state.vac_states.not_ready) || (this.stateObj.state == this.state.vac_states.pending) || (this.stateObj.state == this.state.vac_states.empty)) {
             return this.state.buttons[key]
             ? html`<div class="button-blank" style="cursor:default" @click="${() => this.tabSwap('total')}"></div>`
             : null;
@@ -165,7 +165,7 @@
       getState(field) {
         const value = this.stateObj.state;
         if (this.state.autoSwitch) {
-          if (value !== this.state.vac_states.ready ? this.tabSwap('last') : this.tabSwap('total'));
+          if (((value !== this.state.vac_states.ready) && (value !== this.state.vac_states.not_ready)) ? this.tabSwap('last') : this.tabSwap('total'));
         }
         return `${this.state.labels[field]}: ${value}`;
       };
@@ -223,7 +223,7 @@
             }
           case "dock":
             if ((this.stateObj.attributes['phase'] === this.state.vac_states.charge) || (this.stateObj.attributes['phase'] === this.state.vac_states.idle)) {
-              // Resume
+              // Empty
               switch(field) {
                 case "label":
                   return `Empty Bin`;
@@ -245,26 +245,13 @@
             }
           case "stop":
             // Stop
-            if (this.stateObj.state === this.state.vac_states.ready) {
-              // Blank
-              switch(field) {
-                case "label":
-                  return ``;
-                case "icon":
-                  return ``;
-                case "action":
-                  return ``;
-              }
-            } else {
-              // Stop
-              switch(field) {
-                case "label":
-                  return `Stop`;
-                case "icon":
-                  return `mdi:stop`;
-                case "action":
-                    return `stop`;
-              }
+            switch(field) {
+              case "label":
+                return `Stop`;
+              case "icon":
+                return `mdi:stop`;
+              case "action":
+                return `stop`;
             }
         }       
       };
@@ -289,7 +276,7 @@
       };
 
       callService(service) {
-          this._hass.callService('rest_command', 'vacuum_action', {command: this.getButton(service,"action")});
+          this._hass.callService('rest_command', this.state.vacuum_action , {command: this.getButton(service,"action")});
       }
 
       fireEvent(type, options = {}) {
@@ -327,6 +314,7 @@
           };
 
           const vac_states = {
+            not_ready: 'Not Ready',
             ready: 'Ready',
             paused: 'Paused',
             stuck: 'Stuck',
@@ -362,7 +350,8 @@
           };
 
           if (!config.entity) throw new Error('Please define an entity.');
-          if (config.entity.split('.')[0] !== 'sensor') throw new Error('Please define a sensor entity.');
+          const re = new RegExp("(sensor|vacuum)");
+          if (!re.test(config.entity.split('.')[0])) throw new Error('Please define a sensor or vacuum entity.');
 
           this.state = {
               showTotals: config.totals !== false,
@@ -376,6 +365,7 @@
               defaultTotals: config.defaultjob !== true ? (config.totals !== false ? true : false) : (config.job !== false ? false : true), 
               hideRightGrid: (config.totals === false && config.job === false),
               autoSwitch: config.autoswitch !== false,
+              vacuum_action: config.vacuum_action || 'vacuum_action',
 
               buttons: Object.assign({}, buttons, config.buttons),
               attributes: Object.assign({}, attributes, config.attributes),
