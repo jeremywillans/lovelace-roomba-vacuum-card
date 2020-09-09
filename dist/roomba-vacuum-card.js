@@ -171,15 +171,16 @@
       };
 
       getMaintStatus(field) {
+        const re = new RegExp("(True|true)");
         switch(field) {
           case "icon":
-            if (this.stateObj.attributes['maint_due'] === 'true') {
+            if (re.test(this.stateObj.attributes['maint_due'])) {
               return `mdi:alert`;
             } else {
               return `mdi:checkbox-marked`;
             }
           case "color":
-            if (this.stateObj.attributes['maint_due'] === 'true') {
+            if (re.test(this.stateObj.attributes['maint_due'])) {
               return `red`;
             } else {
               return `green`;
