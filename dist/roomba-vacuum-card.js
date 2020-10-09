@@ -1,3 +1,5 @@
+import { LitElement } from 'lit-element';
+
 ((LitElement) => {
   const html = LitElement.prototype.html;
   const css = LitElement.prototype.css;
