@@ -1,5 +1,3 @@
-import { LitElement } from 'lit-element';
-
 ((LitElement) => {
   const html = LitElement.prototype.html;
   const css = LitElement.prototype.css;
@@ -399,4 +397,4 @@ import { LitElement } from 'lit-element';
   }
 
   customElements.define('roomba-vacuum-card', RoombaVacuumCard);
-})(window.LitElement || Object.getPrototypeOf(customElements.get("hui-view")));
+})(window.LitElement || Object.getPrototypeOf(customElements.get("hui-masonry-view") || customElements.get('hui-view')));
