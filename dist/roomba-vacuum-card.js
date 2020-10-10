@@ -397,4 +397,4 @@
   }
 
   customElements.define('roomba-vacuum-card', RoombaVacuumCard);
-})(window.LitElement || Object.getPrototypeOf(customElements.get("hui-view")));
+})(window.LitElement || Object.getPrototypeOf(customElements.get("hui-masonry-view") || customElements.get('hui-view')));
