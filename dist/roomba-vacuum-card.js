@@ -102,23 +102,23 @@
             <div class="content grid" style="${this.style.content + this.style.text}" >
               <div class="grid-content grid-left" @click="${() => this.fireEvent('hass-more-info')}">
                 <div>${this.getState('status')}</div>
-                <div>${this.getValue('mode')}</div>
-                <div>${this.getValue('battery')}</div>
-                <div>${this.getValue('clean_base')}</div>
+                ${this.state.layout['left_2'] ? html`<div>${this.getValue(this.state.layout['left_2'])}</div>` : null}
+                ${this.state.layout['left_3'] ? html`<div>${this.getValue(this.state.layout['left_3'])}</div>` : null}
+                ${this.state.layout['left_4'] ? html`<div>${this.getValue(this.state.layout['left_4'])}</div>` : null}
               </div>
               <div id="total" class="${this.state.hideRightGrid ? "grid-content " : "grid-content grid-right totals"} ${this.state.defaultTotals ? "tabactive" : "tabpassive"}" @click="${() => this.tabSwap('last')}">
               ${this.state.showTotals ? html`
-                <div>${this.getValue('total_area')}</div>
-                <div>${this.getValue('total_time')}</div>
-                <div>${this.getValue('total_jobs')}</div>
-                <div>${this.getValue('evac_events')}</div>` : null}
+                ${this.state.layout['right_total_1'] ? html`<div>${this.getValue(this.state.layout['right_total_1'])}</div>` : null}
+                ${this.state.layout['right_total_2'] ? html`<div>${this.getValue(this.state.layout['right_total_2'])}</div>` : null}
+                ${this.state.layout['right_total_3'] ? html`<div>${this.getValue(this.state.layout['right_total_3'])}</div>` : null}
+                ${this.state.layout['right_total_4'] ? html`<div>${this.getValue(this.state.layout['right_total_4'])}</div>` : null}` : null}
               </div>
               <div id="last" class="${this.state.hideRightGrid ? "grid-content " : "grid-content grid-right job"} ${this.state.defaultTotals ? "tabpassive" : "tabactive"}" @click="${() => this.tabSwap('total')}">
               ${this.state.showJob ? html`
-                <div>${this.getValue('job_initiator')}</div>
-                <div>${this.getValue('job_time')}</div>
-                <div>${this.getValue('job_recharge')}</div>
-                <div>${this.getValue('job_area')}</div>` : null}
+              ${this.state.layout['right_job_1'] ? html`<div>${this.getValue(this.state.layout['right_job_1'])}</div>` : null}
+              ${this.state.layout['right_job_2'] ? html`<div>${this.getValue(this.state.layout['right_job_2'])}</div>` : null}
+              ${this.state.layout['right_job_3'] ? html`<div>${this.getValue(this.state.layout['right_job_3'])}</div>` : null}
+              ${this.state.layout['right_job_4'] ? html`<div>${this.getValue(this.state.layout['right_job_4'])}</div>` : null}` : null}
               </div>
             </div>` : null}
             ${this.state.showButtons ? html`
@@ -145,6 +145,9 @@
       }
 
       getValue(field) {
+          if (field === 'blank') {
+            return `‎‎‎‏‏‎ ‎`;
+          }
           if ((this.state.attributes[field] === 'clean_base') && (!this.state.cleanBase)) { 
             field = this.state.attributes.bin;
             const bin_check = this.state.attributes.bin_present;
@@ -195,7 +198,7 @@
               // Full Clean
               switch(field) {
                 case "label":
-                  return `Full Clean`;
+                  return this.state.labels['full_clean'];
                 case "icon":
                   return `mdi:play`;
                 case "action":
@@ -205,7 +208,7 @@
               // Resume
               switch(field) {
                 case "label":
-                  return `Resume`;
+                  return this.state.labels['resume'];
                 case "icon":
                   return `mdi:play-pause`;
                 case "action":
@@ -215,7 +218,7 @@
               // Pause
               switch(field) {
                 case "label":
-                  return `Pause`;
+                  return this.state.labels['pause'];
                 case "icon":
                   return `mdi:pause`;
                 case "action":
@@ -227,7 +230,7 @@
               // Empty
               switch(field) {
                 case "label":
-                  return `Empty Bin`;
+                  return this.state.labels['empty'];
                 case "icon":
                   return `mdi:home-minus`;
                 case "action":
@@ -237,7 +240,7 @@
               // Pause
               switch(field) {
                 case "label":
-                  return `Dock`;
+                  return this.state.labels['dock'];
                 case "icon":
                   return `mdi:home-minus`;
                 case "action":
@@ -248,7 +251,7 @@
             // Stop
             switch(field) {
               case "label":
-                return `Stop`;
+                return this.state.labels['stop'];
               case "icon":
                 return `mdi:stop`;
               case "action":
@@ -311,7 +314,13 @@
               job_initiator: 'Source',
               job_time: 'Time',
               job_recharge: 'Resume In',
-              job_area: 'Area'
+              job_expires: 'Expires In',
+              full_clean: 'Full Clean',
+              resume: 'Resume',
+              pause: 'Pause',
+              empty: 'Empty Bin',
+              dock: 'Dock',
+              stop: 'Stop'
           };
 
           const vac_states = {
@@ -340,7 +349,7 @@
               job_initiator: 'job_initiator',
               job_time: 'job_time',
               job_recharge: 'job_recharge',
-              job_area: 'job_area'
+              job_expires: 'job_expires'
           };
 
           const buttons = {
@@ -349,6 +358,20 @@
               stop: true,
               dock: true
           };
+
+          const layout = {
+            left_2: 'mode',
+            left_3: 'battery',
+            left_4: 'clean_base',
+            right_total_1: 'total_area',
+            right_total_2: 'total_time',
+            right_total_3: 'total_jobs',
+            right_total_4: 'evac_events',
+            right_job_1: 'job_initiator',
+            right_job_2: 'job_time',
+            right_job_3: 'job_recharge',
+            right_job_4: 'job_expires',
+        };
 
           if (!config.entity) throw new Error('Please define an entity.');
           const re = new RegExp("(sensor|vacuum)");
@@ -372,6 +395,7 @@
               attributes: Object.assign({}, attributes, config.attributes),
               vac_states: Object.assign({}, vac_states, config.vac_states),
               labels: Object.assign({}, labels, config.labels),
+              layout: Object.assign({}, layout, config.layout),
           };
 
           this.style = {

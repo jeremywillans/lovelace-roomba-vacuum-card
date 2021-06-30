@@ -42,6 +42,7 @@ resources:
 | attributes | object/bool | *(see below)* | Customize attribute fields
 | labels | object/bool | *(see below)* | Customize label fields
 | vac_states | object/bool | *(see below)* | Customize vacuum states
+| layout | object/bool | *(see below)* | Customize vacuum card layout 
 | maint | bool | true | Display maintenance status
 | clean_base | bool | true | If no Clean Base, Set to `false` to show Bin Status
 | totals | bool | true | Show Total Stats on Right
@@ -58,7 +59,26 @@ resources:
 | stop | bool | `false` | Show or hide stop button - enable blank (below) if you disable this
 | blank | bool | `true` | Show or hide blank button - splits startstop and dock if stop is disabled
 | dock | bool | `true` | Show or hide dock/empty button
-| find | bool | `false` | Show or hide find button - not yet implemented in rest980
+
+### Layout object
+
+Customize card layout.
+**Note:** Status (top left), cannot be customized.
+If you want to hide a field, use `false`, if you want to keep a blank link in its place, use `blank`
+
+| Name | Type | Default
+| ---- | ---- | -------
+| left_2 | string | `mode` 
+| left_3 | string | `battery`
+| left_4 | string | `clean_base`
+| right_total_1 | string | `total_area`
+| right_total_2 | string | `total_time`
+| right_total_3 | string | `total_jobs`
+| right_total_4 | string | `evac_events`
+| right_job_1 | string | `job_initiator`
+| right_job_2 | string | `job_time`
+| right_job_3 | string | `job_recharge`
+| right_job_4 | string | `job_expires`
 
 ### Attributes object
 
@@ -76,10 +96,10 @@ Customize attribute fields.
 | total_time | string | `job_time` | Change total job time attribute
 | total_jobs | string | `total_jobs` | Change total jobs attribute
 | evac_events | string | `evac_events` | Change clean base empties attribute (for Clean Base)
-| job_initiator | string | `last_job` | Change current/last mission job initiator attribute
-| job_time | string | `last_job_time` | Change current/last mission area cleaned attribute
-| job_recharge | string | `last_job_recharge_time` | Change current/last mission recharge minutes attribute
-| job_area | string | `last_job_area` | Change current/last mission area cleaned attribute
+| job_initiator | string | `job_initiator` | Change current/last mission job initiator attribute
+| job_time | string | `job_time` | Change current/last mission area time attribute
+| job_recharge | string | `job_recharge` | Change current/last mission recharge minutes attribute
+| job_expires | string | `job_expires` | Change current/last mission expiry minutes attribute
 
 ### Labels object
 
@@ -98,8 +118,14 @@ Customize or translate label names.
 | evac_events | string | `Evacs` | Change clean base empties label (for Clean Base)
 | job_initiator | string | `Source` | Change current/last mission job initiator label
 | job_time | string | `Time` | Change current/last mission area time label
-| job_recharge | string | `Recharge` | Change current/last mission recharge minutes label
-| job_area | string | `Area` | Change current/last mission area cleaned label
+| job_recharge | string | `Recharge In` | Change current/last mission recharge minutes label
+| job_expires | string | `Expires In` | Change current/last mission expiry minutes label
+| full_clean | string | `Full Clean` | Change full clean button label
+| resume | string | `Resume` | Change resume button label
+| pause | string | `Pause` | Change pause button label
+| empty | string | `Empty Bin` | Change empty bin button label
+| dock | string | `Dock` | Change dock button label
+| stop | string | `Stop` | Change stop button label
 
 ### Vac_States object
 
