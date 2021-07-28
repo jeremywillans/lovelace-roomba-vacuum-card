@@ -1,12 +1,12 @@
 # roomba-vacuum-card
 
-HA Lovelace Card for iRobot Roomba Vacuum Cleaner leveraging the rest980 Docker Image
+HA Lovelace Card for iRobot Roomba Vacuum or Braava Mop leveraging the rest980 Docker Image
 
 Please refer my [ha-rest980-roomba] GitHub Repository for detailed instructions for using this card.
 
 [![gh_release]](../../releases)
 [![gh_last_commit]](../../commits/master)
-[![hacs_custom]][hacs]
+[![hacs_badge]][hacs]
 
 ![roomba-vacuum-card](https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/examples/default.png)
 
@@ -21,7 +21,7 @@ resources:
 
 OR 
 
-Manually add [roomba-vacuum-card.js] and [vacuum.png]
+Manually add [roomba-vacuum-card.js] and [vacuum.png] (optionally include `mop.png`)
 to your `<config>/www/` folder and add the following to your `ui-lovelace.yaml` file:
 ```yaml
 resources:
@@ -36,20 +36,29 @@ resources:
 | ---- | ---- | ------- | -----------
 | type | string | **Required** | `custom:roomba-vacuum-card`
 | entity | string | **Required** | `sensor.vacuum`
+| mode | string | `vacuum` | Defines preset configuration, options are `vacuum` or `mop`
 | name | string/bool | `friendly_name` | Override entity friendly name (set to `false` to hide title)
 | image | string/bool | `/<hacs>/vacuum.png` | Custom path/name of background image (set to `false` to disable background)
 | buttons | object/bool | *(see below)* | Set to `false` to hide button row
 | attributes | object/bool | *(see below)* | Customize attribute fields
 | labels | object/bool | *(see below)* | Customize label fields
-| vac_states | object/bool | *(see below)* | Customize vacuum states
+| robot_states | object/bool | *(see below)* | Customize robot states
 | layout | object/bool | *(see below)* | Customize vacuum card layout 
-| maint | bool | true | Display maintenance status
+| maint | bool | true | Display maintenance and clean mode status
 | clean_base | bool | true | If no Clean Base, Set to `false` to show Bin Status
 | totals | bool | true | Show Total Stats on Right
 | job | bool | true | Show Job Stats on Right
 | defaultTotals | bool | true | Shows Total Stats by default when not cleaning
 | autoswitch | bool | true | Auto switches to Job Stats when cleaning
-| vacuum_action | string | `vacuum_action` | Change action rest command
+| robot_action | string | `vacuum_action` | Change action rest command, default for mop mode is `mop_action`
+
+### Mode
+
+This card now has preset options for the Braava Mop. If selected using `mode: mop` the following will apply
+- Layout lists tank and pad, replacing Clean Base and Evacs
+- Background Image is changed to Braava Jet
+- Robot Action is changed to `mop_action`
+- Clean Mode is updated to reflect Pad Wetness Attribute
 
 ### Buttons object
 
@@ -100,6 +109,8 @@ Customize attribute fields.
 | job_time | string | `job_time` | Change current/last mission area time attribute
 | job_recharge | string | `job_recharge` | Change current/last mission recharge minutes attribute
 | job_expires | string | `job_expires` | Change current/last mission expiry minutes attribute
+| tank | string | `tank` | Change tank attribute
+| pad | string | `pad` | Change pad attribute
 
 ### Labels object
 
@@ -126,10 +137,14 @@ Customize or translate label names.
 | empty | string | `Empty Bin` | Change empty bin button label
 | dock | string | `Dock` | Change dock button label
 | stop | string | `Stop` | Change stop button label
+| tank | string | `Tank` | Change tank label
+| pad | string | `Pad` | Change pad label
+| missing | string | `Missing!` | Change missing label
+| unavailable | string | `Unavailable` | Change unavailable label
 
-### Vac_States object
+### Robot_States object
 
-Customize or translate vacuum states as defined in vacuum.yaml.
+Customize or translate robot states as defined in vacuum.yaml or mop.yaml.
 
 | Name | Type | Default | Description
 | ---- | ---- | ------- | -----------
@@ -215,7 +230,7 @@ or any of its subsidiaries or its affiliates. The official iRobot website can be
 
 [gh_release]: https://img.shields.io/github/v/release/jeremywillans/lovelace-roomba-vacuum-card.svg?style=for-the-badge
 [gh_last_commit]: https://img.shields.io/github/last-commit/jeremywillans/lovelace-roomba-vacuum-card.svg?style=for-the-badge
-[hacs_custom]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
+[hacs_badge]: https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge
 [hacs]: https://github.com/custom-components/hacs
 
 [roomba-vacuum-card.js]: https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/dist/roomba-vacuum-card.js
