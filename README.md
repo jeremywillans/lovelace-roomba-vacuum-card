@@ -231,7 +231,7 @@ or any of its subsidiaries or its affiliates. The official iRobot website can be
 [gh_release]: https://img.shields.io/github/v/release/jeremywillans/lovelace-roomba-vacuum-card.svg?style=for-the-badge
 [gh_last_commit]: https://img.shields.io/github/last-commit/jeremywillans/lovelace-roomba-vacuum-card.svg?style=for-the-badge
 [hacs_badge]: https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge
-[hacs]: https://github.com/custom-components/hacs
+[hacs]: https://github.com/hacs/integration
 
 [roomba-vacuum-card.js]: https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/dist/roomba-vacuum-card.js
 [vacuum.png]: https://raw.githubusercontent.com/jeremywillans/lovelace-roomba-vacuum-card/master/dist/vacuum.png
